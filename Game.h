@@ -29,6 +29,7 @@ private:
 	void HandleEnemyMasterMove();
 	void HandleCollisionEnemyWeaponBlock();
 	void HandleCollisionWeaponPlayer();
+	void HandleCollisionEnemyPlayer();
 	void HanldeEnemyWeaponMoves();
 	void HandleEnemyWeaponFiring();
 	void HandleCollisionBlockEnemy();

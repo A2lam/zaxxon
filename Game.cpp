@@ -266,6 +266,7 @@ void Game::updateStatistics(sf::Time elapsedTime)
 		HandleGameOver();
 		HandleCollisionWeaponEnemy();
 		HandleCollisionWeaponPlayer();
+		HandleCollisionEnemyPlayer();
 		HandleCollisionWeaponBlock();
 		HandleCollisionEnemyWeaponBlock();
 		HandleCollisionEnemyMasterWeaponBlock();
@@ -555,6 +556,40 @@ void Game::HandleCollisionWeaponPlayer()
 		if (boundWeapon.intersects(boundPlayer) == true)
 		{
 			weapon->m_enabled = false;
+			_IsEnemyWeaponFired = false;
+			_lives--;
+			goto end;
+		}
+	}
+
+end:
+	//nop
+	return;
+}
+
+void Game::HandleCollisionEnemyPlayer()
+{
+	for (std::shared_ptr<Entity> enemy : EntityManager::m_Entities)
+	{
+		if (enemy->m_enabled == false)
+		{
+			continue;
+		}
+
+		if (enemy->m_type != EntityType::enemy)
+		{
+			continue;
+		}
+
+		sf::FloatRect boundEnemy;
+		boundEnemy = enemy->m_sprite.getGlobalBounds();
+
+		sf::FloatRect boundPlayer;
+		boundPlayer = EntityManager::GetPlayer()->m_sprite.getGlobalBounds();
+
+		if (boundEnemy.intersects(boundPlayer) == true)
+		{
+			enemy->m_enabled = false;
 			_IsEnemyWeaponFired = false;
 			_lives--;
 			goto end;
