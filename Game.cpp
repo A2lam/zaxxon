@@ -268,6 +268,7 @@ void Game::updateStatistics(sf::Time elapsedTime)
 		HandleCollisionWeaponPlayer();
 		HandleCollisionEnemyPlayer();
 		HandleCollisionWeaponBlock();
+		HandleCollisionPlayerBlock();
 		HandleCollisionEnemyWeaponBlock();
 		HandleCollisionEnemyMasterWeaponBlock();
 		HandleCollisionEnemyMasterWeaponPlayer();
@@ -848,6 +849,57 @@ void Game::HandleCollisionWeaponBlock()
 				weapon->m_enabled = false;
 				_IsPlayerWeaponFired = false;
 				//break;
+				goto end2;
+			}
+		}
+	}
+
+end2:
+	//nop
+	return;
+}
+
+void Game::HandleCollisionPlayerBlock()
+{
+	// Handle collision weapon blocks
+
+	for (std::shared_ptr<Entity> player : EntityManager::m_Entities)
+	{
+		if (player->m_enabled == false)
+		{
+			continue;
+		}
+
+		if (player->m_type != EntityType::player)
+		{
+			continue;
+		}
+
+		for (std::shared_ptr<Entity> block : EntityManager::m_Entities)
+		{
+			if (block->m_type != EntityType::block)
+			{
+				continue;
+			}
+
+			if (block->m_enabled == false)
+			{
+				continue;
+			}
+
+			sf::FloatRect boundPlayer;
+			boundPlayer = player->m_sprite.getGlobalBounds();
+
+			sf::FloatRect boundBlock;
+			boundBlock = block->m_sprite.getGlobalBounds();
+
+			if (boundPlayer.intersects(boundBlock) == true)
+			{
+				int x = EntityManager::GetPlayer()->m_sprite.getPosition().x;
+				int y = EntityManager::GetPlayer()->m_sprite.getPosition().y;
+				player->m_position.x = x - 1;
+				player->m_position.y = y;
+				// break;
 				goto end2;
 			}
 		}
